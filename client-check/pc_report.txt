@@ -1,0 +1,82 @@
+========================================== 
+         Диагностика компьютера 
+========================================== 
+ 
+Операционная система: 
+------------------------------------------ 
+Название: Майкрософт Windows 11 Pro 
+Версия:   10.0.26200 
+ 
+Процессор: 
+------------------------------------------ 
+AMD Ryzen 7 260 w/ Radeon 780M Graphics         
+ 
+Оперативная память: 
+------------------------------------------ 
+Всего памяти: 15 ГБ 
+Свободно памяти: 6 ГБ 
+ 
+Диск C: 
+------------------------------------------ 
+Всего на диске: 0 ГБ 
+Свободно: 0 ГБ 
+ 
+Установленные программы: 
+------------------------------------------ 
+Идёт поиск программ... 
+7-Zip 23.01 (x64) 
+Factorio 
+PostgreSQL 18  
+Terraria 
+Mindustry 
+Subnautica 
+R.E.P.O. 
+Counter-Strike 2 
+uTorria 
+Microsoft Windows Desktop Runtime - 8.0.24 (x64) 
+Microsoft GameInput 
+Microsoft Windows Application Compatibility Fix Database 
+Microsoft Visual C++ 2012 x64 Additional Runtime - 11.0.61030 
+Microsoft Visual C++ 2022 X64 Minimum Runtime - 14.44.35211 
+Microsoft .NET Host FX Resolver - 8.0.24 (x64) 
+Java 8 Update 461 (64-bit) 
+Microsoft .NET Runtime - 8.0.24 (x64) 
+TeamSpeak 
+Microsoft Visual C++ 2022 X64 Additional Runtime - 14.44.35211 
+Microsoft Visual C++ 2013 x64 Additional Runtime - 12.0.21005 
+Microsoft Visual C++ 2013 x64 Minimum Runtime - 12.0.21005 
+Microsoft .NET Host - 8.0.24 (x64) 
+NVIDIA Графический драйвер 610.71 
+NVIDIA Install Application 
+EA app 
+Microsoft Visual C++ 2012 x64 Minimum Runtime - 11.0.61030 
+Microsoft Edge 
+Среда выполнения Microsoft Edge WebView2 Runtime 
+Overwolf 
+Steam 
+TLauncher 
+Ubisoft Connect 
+Microsoft Visual C++ 2013 Redistributable (x64) - 12.0.30501 
+Microsoft Visual C++ 2015-2022 Redistributable (x86) - 14.44.35211 
+Microsoft Visual C++ 2013 x86 Minimum Runtime - 12.0.21005 
+Microsoft Visual C++ 2012 Redistributable (x86) - 11.0.61030 
+Java Auto Updater 
+Zapret, версия 16.5.25.0 
+Microsoft Visual C++ 2005 Redistributable 
+NVIDIA PhysX 
+Microsoft Visual C++ 2022 X86 Minimum Runtime - 14.44.35211 
+Microsoft Windows Desktop Runtime - 8.0.24 (x64) 
+Microsoft Visual C++ 2012 x86 Additional Runtime - 11.0.61030 
+Microsoft Visual C++ 2012 x86 Minimum Runtime - 11.0.61030 
+Microsoft Visual C++ 2022 X86 Additional Runtime - 14.44.35211 
+Microsoft Visual C++ 2012 Redistributable (x64) - 11.0.61030 
+Radmin VPN 2.1.1 
+Microsoft XNA Framework Redistributable 4.0 Refresh 
+Microsoft Visual C++ 2015-2022 Redistributable (x64) - 14.44.35211 
+Microsoft Visual C++ 2010  x86 Redistributable - 10.0.40219 
+Microsoft Visual C++ 2013 Redistributable (x86) - 12.0.30501 
+Microsoft Visual C++ 2013 x86 Additional Runtime - 12.0.21005 
+ 
+========================================== 
+Отчёт сохранён. 
+========================================== 
