@@ -2,264 +2,133 @@
 chcp 65001 >nul
 
 REM ============================================================
-REM Тема: Диагностика клиентского компьютера
-REM Практическая работа 8
+REM Тема: Диагностика и автоматический анализ ПК
+REM Практическая работа 8 (Модернизированная)
 REM Фамилия: Пчеляков Е.А.
-REM Дата: 2026-10-31
-REM ============================================================
-
-REM Путь к файлу отчёта (рядом с батником)
-set REPORT=%~dp0pc_report.txt
-
-REM Создаём файл отчёта заново
-echo ========================================== > "%REPORT%"
-echo          Диагностика компьютера >> "%REPORT%"
-echo ========================================== >> "%REPORT%"
-echo. >> "%REPORT%"
-
-echo ==========================================
-echo          Диагностика компьютера
-echo ==========================================
-echo.
-
-REM ============================================================
-REM 1. Операционная система
-REM ============================================================
-echo Операционная система:
-echo ------------------------------------------
-echo Операционная система: >> "%REPORT%"
-echo ------------------------------------------ >> "%REPORT%"
-
-wmic os get Caption,Version /format:list
-wmic os get Caption,Version /format:list >> "%REPORT%"
-
-echo.
-echo. >> "%REPORT%"
-
-REM ============================================================
-REM 2. Процессор
-REM ============================================================
-echo Процессор:
-echo ------------------------------------------
-echo Процессор: >> "%REPORT%"
-echo ------------------------------------------ >> "%REPORT%"
-
-wmic cpu get Name /format:list
-wmic cpu get Name /format:list >> "%REPORT%"
-
-echo.
-echo. >> "%REPORT%"
-
-REM ============================================================
-REM 3. Оперативная память
-REM ============================================================
-echo Оперативная память:
-echo ------------------------------------------
-echo Оперативная память: >> "%REPORT%"
-echo ------------------------------------------ >> "%REPORT%"
-
-REM Получаем общий объём памяти в килобайтах
-for /f "tokens=2 delims==" %%a in ('wmic os get TotalVisibleMemorySize /value ^| findstr "="') do set TOTAL_KB=%%a
-REM Получаем свободную память в килобайтах
-for /f "tokens=2 delims==" %%a in ('wmic os get FreePhysicalMemory /value ^| findstr "="') do set FREE_KB=%%a
-
-REM Переводим в гигабайты (делим на 1048576)
-set /a TOTAL_GB=%TOTAL_KB% / 1048576
-set /a FREE_GB=%FREE_KB% / 1048576
-
-echo Всего памяти: %TOTAL_GB% ГБ
-echo Свободно памяти: %FREE_GB% ГБ
-echo Всего памяти: %TOTAL_GB% ГБ >> "%REPORT%"
-echo Свободно памяти: %FREE_GB% ГБ >> "%REPORT%"
-
-echo.
-echo. >> "%REPORT%"
-
-REM ============================================================
-REM 4. Диск C
-REM ============================================================
-echo Диск C:
-echo ------------------------------------------
-echo Диск C: >> "%REPORT%"
-echo ------------------------------------------ >> "%REPORT%"
-
-REM Получаем размер и свободное место в байтах
-for /f "tokens=2 delims==" %%a in ('wmic logicaldisk where "DeviceID='C:'" get Size /value ^| findstr "="') do set SIZE_B=%%a
-for /f "tokens=2 delims==" %%a in ('wmic logicaldisk where "DeviceID='C:'" get FreeSpace /value ^| findstr "="') do set FREE_B=%%a
-
-REM Переводим в гигабайты (делим на 1073741824)
-set /a SIZE_GB=%SIZE_B% / 1073741824
-set /a FREE_GB=%FREE_B% / 1073741824
-
-echo Всего на диске: %SIZE_GB% ГБ
-echo Свободно: %FREE_GB% ГБ
-echo Всего на диске: %SIZE_GB% ГБ >> "%REPORT%"
-echo Свободно: %FREE_GB% ГБ >> "%REPORT%"
-
-echo.
-echo. >> "%REPORT%"
-
-REM ============================================================
-REM 5. Установленные программы
-REM ============================================================
-echo Установленные программы:
-echo ------------------------------------------
-echo Установленные программы: >> "%REPORT%"
-echo ------------------------------------------ >> "%REPORT%"
-
-echo Идёт поиск программ, это может занять несколько минут...
-echo Идёт поиск программ, это может занять несколько минут... >> "%REPORT%"
-
-wmic product get Name /format:list
-wmic product get Name /format:list >> "%REPORT%"
-
-echo.
-echo. >> "%REPORT%"
-
-REM ============================================================
-REM 6. Завершение
-REM ============================================================
-echo ==========================================
-echo Отчёт сохранён: %REPORT%
-echo ==========================================
-echo ========================================== >> "%REPORT%"
-echo Отчёт сохранён. >> "%REPORT%"
-echo ========================================== >> "%REPORT%"
-
-pause
-
-
-REM вот код который работает на windows 11, так как на ней способ wmic удалили и прнизнали устаревшей
-
-@echo off
-chcp 65001 >nul
-
-REM ============================================================
-REM Тема: Диагностика клиентского компьютера
-REM Практическая работа 8
-REM Фамилия: Иванов И.И.
-REM Дата: 2026-10-31
+REM Дата: 2026-11-02
 REM ============================================================
 
 set REPORT=%~dp0pc_report.txt
 
-echo ========================================== > "%REPORT%"
-echo          Диагностика компьютера >> "%REPORT%"
-echo ========================================== >> "%REPORT%"
-echo. >> "%REPORT%"
+REM Очистка старого отчета и подготовка заголовка
+(
+echo ============================================================
+echo          ОТЧЁТ О ДИАГНОСТИКЕ И АНАЛИЗЕ СИСТЕМЫ
+echo ============================================================
+echo Дата проверки: %DATE% %TIME%
+echo Исполнитель:   Пчеляков Е.А.
+echo.
+) > "%REPORT%"
 
-echo ==========================================
-echo          Диагностика компьютера
-echo ==========================================
+echo ============================================================
+echo    Запущена диагностика ПК. Пожалуйста, подождите...
+echo ============================================================
 echo.
 
 REM ============================================================
-REM 1. Операционная система (через PowerShell)
+REM БЛОК 1. СБОР ДАННЫХ И ХРАНЕНИЕ В ПЕРЕМЕННЫХ
 REM ============================================================
-echo Операционная система:
-echo ------------------------------------------
-echo Операционная система: >> "%REPORT%"
-echo ------------------------------------------ >> "%REPORT%"
 
-for /f "delims=" %%a in ('powershell -NoProfile -Command "(Get-CimInstance Win32_OperatingSystem).Caption"') do set OS_NAME=%%a
-for /f "delims=" %%a in ('powershell -NoProfile -Command "(Get-CimInstance Win32_OperatingSystem).Version"') do set OS_VER=%%a
+REM Защита от сбоев: если PowerShell недоступен, переменные останутся пустыми
+set "OS_NAME=Не удалось определить" & set "OS_VER=-"
+set "CPU_NAME=Не удалось определить"
+set "TOTAL_GB=0" & set "FREE_GB=0"
+set "DISK_TOTAL=0" & set "DISK_FREE=0"
 
-echo Название: %OS_NAME%
-echo Версия:   %OS_VER%
-echo Название: %OS_NAME% >> "%REPORT%"
-echo Версия:   %OS_VER% >> "%REPORT%"
+REM 1.1 Операционная система
+for /f "delims=" %%a in ('powershell -NoProfile -Command "(Get-CimInstance Win32_OperatingSystem).Caption" 2^>nul') do set "OS_NAME=%%a"
+for /f "delims=" %%a in ('powershell -NoProfile -Command "(Get-CimInstance Win32_OperatingSystem).Version" 2^>nul') do set "OS_VER=%%a"
 
-echo.
-echo. >> "%REPORT%"
+REM 1.2 Процессор
+for /f "delims=" %%a in ('powershell -NoProfile -Command "(Get-CimInstance Win32_Processor).Name" 2^>nul') do set "CPU_NAME=%%a"
 
-REM ============================================================
-REM 2. Процессор (через PowerShell)
-REM ============================================================
-echo Процессор:
-echo ------------------------------------------
-echo Процессор: >> "%REPORT%"
-echo ------------------------------------------ >> "%REPORT%"
+REM 1.3 Оперативная память
+for /f "delims=" %%a in ('powershell -NoProfile -Command "[math]::Round((Get-CimInstance Win32_OperatingSystem).TotalVisibleMemorySize / 1MB)" 2^>nul') do set "TOTAL_GB=%%a"
+for /f "delims=" %%a in ('powershell -NoProfile -Command "[math]::Round((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory / 1MB)" 2^>nul') do set "FREE_GB=%%a"
 
-for /f "delims=" %%a in ('powershell -NoProfile -Command "(Get-CimInstance Win32_Processor).Name"') do set CPU_NAME=%%a
+REM 1.4 Диск C:
+for /f "delims=" %%a in ('powershell -NoProfile -Command "[math]::Round((Get-CimInstance Win32_LogicalDisk -Filter \"DeviceID='C:'\").Size / 1GB)" 2^>nul') do set "DISK_TOTAL=%%a"
+for /f "delims=" %%a in ('powershell -NoProfile -Command "[math]::Round((Get-CimInstance Win32_LogicalDisk -Filter \"DeviceID='C:'\").FreeSpace / 1GB)" 2^>nul') do set "DISK_FREE=%%a"
 
-echo %CPU_NAME%
-echo %CPU_NAME% >> "%REPORT%"
-
-echo.
-echo. >> "%REPORT%"
 
 REM ============================================================
-REM 3. Оперативная память (через PowerShell, сразу в ГБ)
+REM БЛОК 2. АВТОМАТИЧЕСКИЙ АНАЛИЗ И РЕКОМЕНДАЦИИ
 REM ============================================================
-echo Оперативная память:
-echo ------------------------------------------
-echo Оперативная память: >> "%REPORT%"
-echo ------------------------------------------ >> "%REPORT%"
 
-for /f "delims=" %%a in ('powershell -NoProfile -Command "[math]::Round((Get-CimInstance Win32_OperatingSystem).TotalVisibleMemorySize / 1MB)"') do set TOTAL_GB=%%a
-for /f "delims=" %%a in ('powershell -NoProfile -Command "[math]::Round((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory / 1MB)"') do set FREE_GB=%%a
-
-echo Всего памяти: %TOTAL_GB% ГБ
-echo Свободно памяти: %FREE_GB% ГБ
-echo Всего памяти: %TOTAL_GB% ГБ >> "%REPORT%"
-echo Свободно памяти: %FREE_GB% ГБ >> "%REPORT%"
-
-echo.
-echo. >> "%REPORT%"
-
-REM ============================================================
-REM 4. Диск C (через PowerShell, сразу в ГБ)
-REM ============================================================
-echo Диск C:
-echo ------------------------------------------
-echo Диск C: >> "%REPORT%"
-echo ------------------------------------------ >> "%REPORT%"
-
-for /f "delims=" %%a in ('powershell -NoProfile -Command "[math]::Round((Get-CimInstance Win32_LogicalDisk -Filter \"DeviceID='C:'\").Size / 1GB)"') do set DISK_TOTAL=%%a
-for /f "delims=" %%a in ('powershell -NoProfile -Command "[math]::Round((Get-CimInstance Win32_LogicalDisk -Filter \"DeviceID='C:'\").FreeSpace / 1GB)"') do set DISK_FREE=%%a
-
-echo Всего на диске: %DISK_TOTAL% ГБ
-echo Свободно: %DISK_FREE% ГБ
-echo Всего на диске: %DISK_TOTAL% ГБ >> "%REPORT%"
-echo Свободно: %DISK_FREE% ГБ >> "%REPORT%"
-
-echo.
-echo. >> "%REPORT%"
-
-REM ============================================================
-REM 5. Установленные программы (через реестр — быстро и без wmic)
-REM ============================================================
-echo Установленные программы:
-echo ------------------------------------------
-echo Установленные программы: >> "%REPORT%"
-echo ------------------------------------------ >> "%REPORT%"
-
-echo Идёт поиск программ...
-echo Идёт поиск программ... >> "%REPORT%"
-
-for /f "tokens=1,2,*" %%a in ('reg query "HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall" /s 2^>nul ^| findstr "DisplayName"') do (
-    if "%%a"=="DisplayName" echo %%c
-    if "%%a"=="DisplayName" echo %%c >> "%REPORT%"
-)
-for /f "tokens=1,2,*" %%a in ('reg query "HKLM\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall" /s 2^>nul ^| findstr "DisplayName"') do (
-    if "%%a"=="DisplayName" echo %%c
-    if "%%a"=="DisplayName" echo %%c >> "%REPORT%"
+REM Вычисление процента свободного места на диске C (Защита от деления на 0)
+set "DISK_PCT=0"
+if %DISK_TOTAL% GTR 0 (
+    set /a "DISK_PCT=(DISK_FREE * 100) / DISK_TOTAL"
 )
 
-echo.
-echo. >> "%REPORT%"
+REM Логика формирования рекомендаций
+set "REC_RAM=► Объем ОЗУ достаточен для базовых задач."
+if %TOTAL_GB% LSS 8 (
+    set "REC_RAM=‼ ВНИМАНИЕ: На ПК менее 8 ГБ ОЗУ. Рекомендуется увеличить память для быстрой работы Windows 11."
+)
+
+set "REC_DISK=► На диске C достаточно свободного места."
+if %DISK_FREE% LSS 20 (
+    set "REC_DISK=‼ КРИТИЧЕСКИ МАЛО МЕСТА: Свободно менее 20 ГБ. Windows может сильно тормозить. Срочно очистите диск!"
+) else (
+    if %DISK_PCT% LSS 15 (
+        set "REC_DISK=⚠ ПРЕДУПРЕЖДЕНИЕ: Свободно менее 15%% объема диска. Рекомендуется провести очистку (папки Загрузки, Корзина)."
+    )
+)
+
 
 REM ============================================================
-REM 6. Завершение
+REM БЛОК 3. ВЫВОД ИНФОРМАЦИИ НА ЭКРАН И ЗАПИСЬ В ОТЧЕТ
 REM ============================================================
-echo ==========================================
-echo Отчёт сохранён: %REPORT%
-echo ==========================================
-echo ========================================== >> "%REPORT%"
-echo Отчёт сохранён. >> "%REPORT%"
-echo ========================================== >> "%REPORT%"
+
+REM Команда-обертка позволяет записать весь текст в файл за один раз, дублирование убрано.
+(
+echo ============================================================
+echo 1. ХАРАКТЕРИСТИКИ СИСТЕМЫ
+echo ============================================================
+echo [ОС]:         %OS_NAME% (Версия: %OS_VER%)
+echo [Процессор]:  %CPU_NAME%
+echo [Память]:     Всего: %TOTAL_GB% ГБ | Свободно сейчас: %FREE_GB% ГБ
+echo [Диск C:]:    Всего: %DISK_TOTAL% ГБ | Свободно: %DISK_FREE% ГБ (%DISK_PCT%%% свободно)
+echo.
+echo ============================================================
+echo 2. АВТОМАТИЧЕСКИЙ АНАЛИЗ И РЕКОМЕНДАЦИИ
+echo ============================================================
+echo %REC_RAM%
+echo %REC_DISK%
+echo.
+echo ============================================================
+echo 3. СПИСОК УСТАНОВЛЕННЫХ ПРОГРАММ
+echo ============================================================
+) > "%TEMP%\layout.txt"
+
+REM Выводим заголовок и анализ пользователю в консоль и добавляем в отчет
+type "%TEMP%\layout.txt"
+type "%TEMP%\layout.txt" >> "%REPORT%"
+del "%TEMP%\layout.txt"
+
+REM Сбор программ (Быстрый и безопасный метод через реестр взамен зависающего Win32_Product)
+echo Пожалуйста, подождите, идет сбор списка программ (до 5-10 секунд)...
+echo Пожалуйста, подождите, идет сбор списка программ (до 5-10 секунд)... >> "%REPORT%"
+
+powershell -NoProfile -Command "Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*, HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* -ErrorAction SilentlyContinue | Where-Object {$_.DisplayName} | Select-Object -ExpandProperty DisplayName | Sort-Object" > "%TEMP%\apps.txt"
+
+type "%TEMP%\apps.txt"
+type "%TEMP%\apps.txt" >> "%REPORT%"
+del "%TEMP%\apps.txt"
+
+REM ============================================================
+REM БЛОК 4. ФИНАЛ
+REM ============================================================
+echo.
+echo ============================================================
+echo  УСПЕШНО: Диагностика завершена!
+echo  Полный отчет с анализом сохранен в файл:
+echo  %REPORT%
+echo ============================================================
+echo.
+
+echo ============================================================ >> "%REPORT%"
+echo Конец отчета. >> "%REPORT%"
 
 pause
-
-
-
